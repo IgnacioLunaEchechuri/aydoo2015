@@ -25,5 +25,24 @@ public class CharCounter {
 		return contadorLetrasEncontradas;
 
 	}
+	
+public HashMap<Character, Integer> countAll() {
+		int a = (int) 'a';
+		HashMap<Character, Integer> contadorCaracteres = new HashMap<Character, Integer>();
+		char[] abecedario = new char[26];
+		char[] charArrayFrase = this.frase.toCharArray();
+
+		for (int i = 0; i < abecedario.length; i++)
+			contadorCaracteres.put((char) (a + i), 0);
+
+			for (char i : charArrayFrase) {
+
+				contadorCaracteres.put(i, contadorCaracteres.get(i) == null ? 1
+						: contadorCaracteres.get(i) + 1);
+
+			}
+		return contadorCaracteres;
+		}
+	
 
 }
