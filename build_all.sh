@@ -2,6 +2,6 @@
 set -e
 cd ejercicio1
 ant
-cd..
+cd ..
 cd TrabajoPractico1
 ant
