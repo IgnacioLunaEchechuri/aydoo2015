@@ -7,7 +7,7 @@ public class CharCounterTest {
     @Test
     public void howManyShouldReturnZeroWhenCharIsNotPresent(){
         
-        CharCounter counter = new CharCounter("hello world");
+        CharCounter counter = new CharCounter("hello  world");
 
         Assert.assertEquals(0, counter.howMany('y'));
 
