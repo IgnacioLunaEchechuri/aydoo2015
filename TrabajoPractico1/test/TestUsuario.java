@@ -14,4 +14,15 @@ public class TestUsuario {
 		Assert.assertEquals(10, jose.getPosicion().getLongitud(), 0);
 	}
 
+	@Test
+	public void testTiempo() {
+		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 10);
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				posicion);
+		Assert.assertTrue(jose.getTiempoDisponible() == 160);
+		jose.restartiempo(20);
+		Assert.assertFalse(jose.getTiempoDisponible() == 160);
+		Assert.assertEquals(140, jose.getTiempoDisponible(), 0);
+	}
+
 }

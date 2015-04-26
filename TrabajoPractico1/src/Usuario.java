@@ -1,20 +1,24 @@
 public class Usuario {
-	
+
 	private float presupuesto, velocidadDeTransaldo;
 	private int tiempoDisponible;
 	private TipoDeAtraccion atracccionPreferida;
 	private PosicionPorCoordenadas posicion;
-	
-	public Usuario ( float presupuesto, float velocidadDeTranslado, int tiempoDisponible,
-	 TipoDeAtraccion atracccionPreferida, PosicionPorCoordenadas posicion){
-		
-		this.presupuesto=presupuesto;
-		this.velocidadDeTransaldo=velocidadDeTranslado;
-		this.tiempoDisponible=tiempoDisponible;
-		this.atracccionPreferida=atracccionPreferida;
-		this.posicion=posicion;
+
+	public Usuario(float presupuesto, float velocidadDeTranslado,
+			int tiempoDisponible, TipoDeAtraccion atracccionPreferida,
+			PosicionPorCoordenadas posicion) {
+
+		this.presupuesto = presupuesto;
+		this.velocidadDeTransaldo = velocidadDeTranslado;
+		this.tiempoDisponible = tiempoDisponible;
+		this.atracccionPreferida = atracccionPreferida;
+		this.posicion = posicion;
 	}
 
+	public void restartiempo(int tiempoParaDescontar) {
+		this.tiempoDisponible -= tiempoParaDescontar;
+	}
 
 	public PosicionPorCoordenadas getPosicion() {
 		return posicion;
