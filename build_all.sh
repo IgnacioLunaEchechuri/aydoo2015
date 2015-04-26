@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
-cd ../ejercicio1
+cd ejercicio1
 ant
-cd ../TrabajoPractico1
+cd TrabajoPractico1
 ant
