@@ -16,6 +16,14 @@ public class Usuario {
 		this.posicion = posicion;
 	}
 
+	public void sumarAlPresupuesto(float dineroADevolver) {
+		this.presupuesto += dineroADevolver;
+	}
+
+	public void restarDelPresupuesto(float dineroADescontar) {
+		this.presupuesto -= dineroADescontar;
+	}
+
 	public void restartiempo(int tiempoParaDescontar) {
 		this.tiempoDisponible -= tiempoParaDescontar;
 	}

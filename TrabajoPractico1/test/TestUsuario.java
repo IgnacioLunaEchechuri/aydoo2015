@@ -25,4 +25,19 @@ public class TestUsuario {
 		Assert.assertEquals(140, jose.getTiempoDisponible(), 0);
 	}
 
+	@Test
+	public void testPresupuesto() {
+		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(40, 10);
+		Usuario ignacio = new Usuario(1000, 10, 160,
+				TipoDeAtraccion.degustacion, posicion);
+		Assert.assertTrue(ignacio.getPresupuesto() == 1000);
+		ignacio.restarDelPresupuesto(500);
+		Assert.assertFalse(ignacio.getPresupuesto() == 1000);
+		Assert.assertEquals(500, ignacio.getPresupuesto(), 0);
+		ignacio.restarDelPresupuesto(70);
+		Assert.assertEquals(430, ignacio.getPresupuesto(), 0);
+		ignacio.sumarAlPresupuesto(70);
+		Assert.assertEquals(500,ignacio.getPresupuesto(), 0);
+	}
+
 }
