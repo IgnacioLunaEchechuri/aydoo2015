@@ -1,7 +1,7 @@
 public class Usuario {
 
 	private float presupuesto, velocidadDeTransaldo;
-	private int tiempoDisponible;
+	private float tiempoDisponible;
 	private TipoDeAtraccion atracccionPreferida;
 	private PosicionPorCoordenadas posicion;
 
@@ -16,6 +16,16 @@ public class Usuario {
 		this.posicion = posicion;
 	}
 
+	public boolean consultaTiempoDisponible(float tiempoRecorridoAtraccion)
+	 {
+		return ((this.getTiempoDisponible() > tiempoRecorridoAtraccion)||(this.getTiempoDisponible() == tiempoRecorridoAtraccion));
+	}
+	
+	public boolean consultaPresupuestoDisponible(float costoAtraccion)
+	 {
+		return ((this.presupuesto > costoAtraccion)||(this.presupuesto == costoAtraccion));
+	}
+	
 	public void sumarAlPresupuesto(float dineroADevolver) {
 		this.presupuesto += dineroADevolver;
 	}
@@ -24,7 +34,7 @@ public class Usuario {
 		this.presupuesto -= dineroADescontar;
 	}
 
-	public void restartiempo(int tiempoParaDescontar) {
+	public void restartiempo(float tiempoParaDescontar) {
 		this.tiempoDisponible -= tiempoParaDescontar;
 	}
 
@@ -44,7 +54,7 @@ public class Usuario {
 		this.atracccionPreferida = atracccionPreferida;
 	}
 
-	public int getTiempoDisponible() {
+	public float getTiempoDisponible() {
 		return tiempoDisponible;
 	}
 
