@@ -2,6 +2,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,6 +22,15 @@ public class TestPromocionAbsoluta {
 		Assert.assertTrue(promocionAbsoluta.validarPromocion(this.llenarPaqueteDeAtracciones()));
 
 		Assert.assertFalse(promocionAbsoluta.validarPromocion(this.atraccionSugerida));
+		
+		this.configurarFechaFueraDeRango();
+		
+		PromocionAbsoluta promocionAbsolutaFueraDeFecha = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
+				this.llenarPaqueteDeAtracciones(), 20);
+		
+		Assert.assertFalse(promocionAbsolutaFueraDeFecha.validarPromocion(this.llenarPaqueteDeAtracciones()));
+		
+		Assert.assertFalse(promocionAbsolutaFueraDeFecha.validarPromocion(this.atraccionSugerida));
 	}
 
 	@Test
@@ -53,6 +63,15 @@ public class TestPromocionAbsoluta {
 		calendar.add(Calendar.DATE, -1);
 		this.Fechainicio = calendar.getTime();
 		calendar.add(Calendar.DATE, 2);
+		this.fechaFinal = calendar.getTime();
+	}
+
+	private void configurarFechaFueraDeRango() {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		this.Fechainicio = calendar.getTime();
+		calendar.add(Calendar.DATE, -2);
 		this.fechaFinal = calendar.getTime();
 	}
 
