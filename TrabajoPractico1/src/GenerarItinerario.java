@@ -5,6 +5,10 @@ import java.util.List;
 public class GenerarItinerario {
 
 	private Itinerario listaItinerario;
+	public void setListaItinerario(Itinerario listaItinerario) {
+		this.listaItinerario = listaItinerario;
+	}
+
 	private List<Promociones> listaPromociones;
 	
 	
@@ -12,7 +16,6 @@ public class GenerarItinerario {
 	public GenerarItinerario() {
 		listaItinerario = new Itinerario();
 		listaPromociones = new LinkedList<Promociones>();
-		//this.listaPromociones=null;
 	}
 
 	public void agregarPromociones(Promociones promocion) {

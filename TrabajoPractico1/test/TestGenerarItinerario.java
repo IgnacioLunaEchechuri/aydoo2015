@@ -8,7 +8,8 @@ import org.junit.Test;
 
 public class TestGenerarItinerario {
 	
-	private List<Atraccion> listaDeatracciones;
+	private List<Atraccion> listaDeatraccionesUnaAtraccion;
+	private List<Atraccion> listaDeatraccionesDosAtracciones;
 	private List<Atraccion> listaDeAtraccionesTresAtracciones;
 	private Itinerario listaItinerario;
 	Atraccion atraccionExtra;
@@ -24,7 +25,7 @@ public class TestGenerarItinerario {
 				posicion);
 
 		GenerarItinerario itinerario = new GenerarItinerario();
-		itinerario.generarItinerario(jose, this.listaDeatracciones, 2);
+		itinerario.generarItinerario(jose, this.listaDeatraccionesDosAtracciones, 2);
 
 		Assert.assertEquals(2, itinerario.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(310, jose.getPresupuesto(), 0);
@@ -63,7 +64,7 @@ public class TestGenerarItinerario {
 		
 			itinerario.agregarPromociones(this.promocionAXB());
 
-		itinerario.generarItinerario(jose, this.listaDeatracciones, 2);
+		itinerario.generarItinerario(jose, this.listaDeatraccionesDosAtracciones, 2);
 	
 		Assert.assertEquals(2, itinerario.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(310, jose.getPresupuesto(), 0);
@@ -79,7 +80,7 @@ public class TestGenerarItinerario {
 
 		GenerarItinerario itinerarioConAxB = new GenerarItinerario();
 		itinerarioConAxB.agregarPromociones(this.promocionAXB());
-		itinerarioConAxB.generarItinerario(ignacio, this.listaDeatracciones, 2);
+		itinerarioConAxB.generarItinerario(ignacio, this.listaDeatraccionesDosAtracciones, 2);
 
 		Assert.assertEquals(3, itinerarioConAxB.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(310, ignacio.getPresupuesto(), 0);
@@ -98,7 +99,7 @@ public class TestGenerarItinerario {
 		itinerarioPromoFueraDeFecha.agregarPromociones(this.promocionAXB());
 		
 
-		itinerarioPromoFueraDeFecha.generarItinerario(pedro, this.listaDeatracciones, 2);
+		itinerarioPromoFueraDeFecha.generarItinerario(pedro, this.listaDeatraccionesDosAtracciones, 2);
 
 		Assert.assertEquals(2, itinerarioPromoFueraDeFecha.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(310, pedro.getPresupuesto(), 0);
@@ -124,7 +125,7 @@ public class TestGenerarItinerario {
 		
 			itinerario.agregarPromociones(this.promocionAbsoluta());
 
-		itinerario.generarItinerario(jose, this.listaDeatracciones, 2);
+		itinerario.generarItinerario(jose, this.listaDeatraccionesDosAtracciones, 2);
 	
 		Assert.assertEquals(2, itinerario.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(330, jose.getPresupuesto(), 0);
@@ -161,7 +162,7 @@ public class TestGenerarItinerario {
 		itinerarioPromoFueraDeFecha.agregarPromociones(this.promocionAbsoluta());
 		
 
-		itinerarioPromoFueraDeFecha.generarItinerario(pedro, this.listaDeatracciones, 2);
+		itinerarioPromoFueraDeFecha.generarItinerario(pedro, this.listaDeatraccionesDosAtracciones, 2);
 
 		Assert.assertEquals(2, itinerarioPromoFueraDeFecha.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(310, pedro.getPresupuesto(), 0);
@@ -187,7 +188,7 @@ public class TestGenerarItinerario {
 		
 			itinerario.agregarPromociones(this.promocionPorcentual());
 
-		itinerario.generarItinerario(jose, this.listaDeatracciones, 2);
+		itinerario.generarItinerario(jose, this.listaDeatraccionesDosAtracciones, 2);
 	
 		Assert.assertEquals(2, itinerario.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(329, jose.getPresupuesto(), 0);
@@ -225,7 +226,7 @@ public class TestGenerarItinerario {
 		itinerarioPromoFueraDeFecha.agregarPromociones(this.promocionPorcentual());
 		
 
-		itinerarioPromoFueraDeFecha.generarItinerario(pedro, this.listaDeatracciones, 2);
+		itinerarioPromoFueraDeFecha.generarItinerario(pedro, this.listaDeatraccionesDosAtracciones, 2);
 
 		Assert.assertEquals(2, itinerarioPromoFueraDeFecha.getListaItinerario().tamanoItinerario(), 0);
 		Assert.assertEquals(310, pedro.getPresupuesto(), 0);
@@ -237,12 +238,51 @@ public class TestGenerarItinerario {
 		
 	}
 	
+	@Test
+	public void testConTodasPromociones() {
+		this.configurarFecha();
+		this.llenarPaqueteDeAtracciones();
+		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 10);
 		
+		Usuario jose = new Usuario(500, 10, 360, TipoDeAtraccion.aventura,
+				posicion);
+
+		GenerarItinerario itinerario=this.itinerario(this.listaDeatraccionesDosAtracciones);		
+
+		itinerario.generarItinerario(jose, this.listaDeatraccionesDosAtracciones, 2);
+	
+		Assert.assertEquals(3, itinerario.getListaItinerario().tamanoItinerario(), 0);
+		Assert.assertEquals(310, jose.getPresupuesto(), 0);
+				
+		itinerario.getListaItinerario().agregarAtraccion(atraccionExtra);
+			
+		Assert.assertEquals(4, itinerario.getListaItinerario().tamanoItinerario(), 0);
+		
+		}
+	
+	
+	private GenerarItinerario itinerario(List <Atraccion> listaAtracciones){
+		GenerarItinerario itinerario = new GenerarItinerario();
+		PromocionAxB promocionAxB = new PromocionAxB(this.Fechainicio,
+		this.fechaFinal,this.getAtraccionGratis(),listaAtracciones );
+		
+		PromocionAbsoluta promocionAbsoluta = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
+				this.listaDeAtraccionesTresAtracciones, 20);
+		
+		PromocionPorcentual promocionPorcentual = new PromocionPorcentual(
+				this.Fechainicio, this.fechaFinal,10,this.listaDeatraccionesUnaAtraccion);
+		itinerario.agregarPromociones(promocionAxB);
+		itinerario.agregarPromociones(promocionAbsoluta);
+		itinerario.agregarPromociones(promocionPorcentual);
+		return itinerario;
+	}	
+	
+	
 	private PromocionAxB promocionAXB(){
 
 
 		PromocionAxB promocionAxB = new PromocionAxB(this.Fechainicio,
-		this.fechaFinal,this.getAtraccionGratis(), this.listaDeatracciones);
+		this.fechaFinal,this.getAtraccionGratis(), this.listaDeatraccionesDosAtracciones);
 
 		return promocionAxB;
 	}
@@ -251,7 +291,7 @@ public class TestGenerarItinerario {
 
 
 		PromocionAbsoluta promocionAbsoluta = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
-				this.listaDeatracciones, 20);
+				this.listaDeatraccionesDosAtracciones, 20);
 
 		return promocionAbsoluta;
 	}
@@ -260,7 +300,7 @@ public class TestGenerarItinerario {
 
 
 		PromocionPorcentual promocionPorcentual = new PromocionPorcentual(
-				this.Fechainicio, this.fechaFinal,10,this.listaDeatracciones);
+				this.Fechainicio, this.fechaFinal,10,this.listaDeatraccionesDosAtracciones);
 
 		return promocionPorcentual;
 	}
@@ -296,9 +336,10 @@ public class TestGenerarItinerario {
 
 	private void llenarPaqueteDeAtracciones() {		
 
-		this.listaDeatracciones = new LinkedList<Atraccion>();
+		this.listaDeatraccionesDosAtracciones = new LinkedList<Atraccion>();
 		this.listaDeAtraccionesTresAtracciones = new LinkedList<Atraccion>();
 
+		this.listaDeatraccionesUnaAtraccion=new LinkedList<Atraccion>();
 		listaItinerario = new Itinerario();
 
 		PosicionPorCoordenadas posicionMordor = new PosicionPorCoordenadas(10,
@@ -322,8 +363,10 @@ public class TestGenerarItinerario {
 		listaItinerario.agregarAtraccion(mordor);
 		listaItinerario.agregarAtraccion(comarca);
 		
-		this.listaDeatracciones.add(mordor);		
-		this.listaDeatracciones.add(comarca);
+		this.listaDeatraccionesUnaAtraccion.add(gondor);
+		
+		this.listaDeatraccionesDosAtracciones.add(mordor);		
+		this.listaDeatraccionesDosAtracciones.add(comarca);
 		
 		this.listaDeAtraccionesTresAtracciones.add(comarca);
 		this.listaDeAtraccionesTresAtracciones.add(gondor);
