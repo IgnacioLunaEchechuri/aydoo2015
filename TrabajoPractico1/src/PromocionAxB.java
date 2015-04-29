@@ -7,7 +7,7 @@ public class PromocionAxB implements Promociones {
 	private Atraccion atraccionGratis;
 	private Date fechaInicio;
 	private Date fechaFinal;
-	private List<Atraccion> listaDeAtracciones, listaModificada;
+	private List<Atraccion> listaDeAtracciones;
 
 	public void setListaDeAtracciones(List<Atraccion> listaDeAtracciones) {
 		this.listaDeAtracciones = listaDeAtracciones;
@@ -66,27 +66,15 @@ public class PromocionAxB implements Promociones {
 						atraccion.getTiempoDelRecorrido());
 	}
 
-	public List<Atraccion> devolverListaModificada() {
-
-		return listaModificada;
-
-	}
-
-	public void setListaModificada(List<Atraccion> listaModificada) {
-
-		this.listaModificada = listaModificada;
-
-	}
+	
 
 	@Override
-	public boolean DevolverPromocion(Usuario usuario,
-			List<Atraccion> sugerenciaDeAtracciones) {
+	public boolean DevolverPromocion(Usuario usuario,Itinerario listaItinerario) {
 
-		boolean confirmarPromocion=this.validarPromocion(sugerenciaDeAtracciones);
-		if ((confirmarPromocion)&&(usuario.consultaTiempoDisponible(this.devolverTiempo(usuario,
+		boolean confirmarPromocion=false;
+		if ((this.validarPromocion(listaItinerario))&&(usuario.consultaTiempoDisponible(this.devolverTiempo(usuario,
 				this.getAtraccionGratis())))) {
-			sugerenciaDeAtracciones.add(this.atraccionGratis);
-			this.setListaModificada(sugerenciaDeAtracciones);
+			listaItinerario.agregarAtraccion(this.atraccionGratis);
 			confirmarPromocion = true;
 		} else
 			confirmarPromocion = false;
@@ -103,32 +91,28 @@ public class PromocionAxB implements Promociones {
 
 	}
 
-	public boolean validarPromocion(List<Atraccion> sugerenciaDeAtracciones) {
+	public boolean validarPromocion(Itinerario listaItinerario) {
 		Boolean validacion = false, validarFecha = this.ValidarFechaPromocion();
-		if ((sugerenciaDeAtracciones.size() == this.listaDeAtracciones.size())
-				&& (validarFecha)) {
+		Atraccion atraccionPaquete = null, atraccionSugerida = null;
+		if ((listaItinerario.tamanoItinerario() == this.listaDeAtracciones.size()) && (validarFecha)) {
 
-			Iterator<Atraccion> iteradorPaqueteDeAtracciones = this.listaDeAtracciones
-					.iterator();
-			Iterator<Atraccion> iteradorSugerenciaDeAtracciones = this.listaDeAtracciones
-					.iterator();
-			Atraccion atraccionPaquete = null, atraccionSugerida = null;
+			Iterator<Atraccion> iteradorListaDeAtracciones = this.listaDeAtracciones.iterator();
+			Iterator<Atraccion> iteradorItinerario = listaItinerario.getItinerario().iterator();
+			
+			while (iteradorListaDeAtracciones.hasNext())
+				atraccionPaquete = iteradorListaDeAtracciones.next();{
 
-			while (iteradorPaqueteDeAtracciones.hasNext())
-				atraccionPaquete = iteradorPaqueteDeAtracciones.next();
+					while (iteradorItinerario.hasNext()) {
+						atraccionSugerida = iteradorItinerario.next();
+						if ((atraccionSugerida.getPosicion().getLatitud() == atraccionPaquete.getPosicion().getLatitud())
+						&& (atraccionSugerida.getPosicion().getLongitud() == atraccionPaquete.getPosicion().getLongitud())) {
 
-			while (iteradorSugerenciaDeAtracciones.hasNext()) {
-				atraccionSugerida = iteradorSugerenciaDeAtracciones.next();
-				if ((atraccionSugerida.getPosicion().getLatitud() == atraccionPaquete
-						.getPosicion().getLatitud())
-						&& (atraccionSugerida.getPosicion().getLongitud() == atraccionPaquete
-								.getPosicion().getLongitud())) {
+					        validacion = true;
+			        	} else
+					       validacion = false;
 
-					validacion = true;
-				} else
-					validacion = false;
-
-			}
+			        }
+     		}
 		}
 		return validacion;
 

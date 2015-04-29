@@ -2,29 +2,40 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 
 public class TestPromocionPorcentual {
 
-	private List<Atraccion> atraccionSugerida;
+	private List<Atraccion> listaDeatracciones;
+	private List<Atraccion> listaDeAtraccionesFallida;
+	private Itinerario listaItinerario;
 	Date Fechainicio = new Date();
 	Date fechaFinal = new Date();
-
+	
 	@Test
 	public void testValidarPromocion() {
-		
+		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
 		PromocionPorcentual promocionPorcentual = new PromocionPorcentual(
-				this.Fechainicio, this.fechaFinal,10, this.llenarPaqueteDeAtracciones());
+				this.Fechainicio, this.fechaFinal,10,this.listaDeatracciones);
 		
-		Assert.assertTrue(promocionPorcentual.validarPromocion(this.llenarPaqueteDeAtracciones()));
+		Assert.assertTrue(promocionPorcentual.validarPromocion(this.listaItinerario));
 
-		Assert.assertFalse(promocionPorcentual.validarPromocion(this.atraccionSugerida));
+		promocionPorcentual.setListaDeAtracciones(this.listaDeAtraccionesFallida);
+		Assert.assertFalse(promocionPorcentual.validarPromocion(this.listaItinerario));
 		
 		Assert.assertEquals(10,promocionPorcentual.getPorcentajePromocion(),0);
+		
+		this.configurarFechaFueraDeRango();
+		PromocionPorcentual promocionPorcentualFueraDeFecha = new PromocionPorcentual(this.Fechainicio,
+				this.fechaFinal,10, this.listaDeatracciones);
+		
+		Assert.assertFalse(promocionPorcentualFueraDeFecha.validarPromocion(this.listaItinerario));
+		
 	}
 
 	@Test
@@ -37,20 +48,28 @@ public class TestPromocionPorcentual {
 		Usuario jose = new Usuario(500, 10, 160, TipoDeAtraccion.paisaje,posicion);
 		
 		
-		PromocionPorcentual promocionPorcentual = new PromocionPorcentual(this.Fechainicio, this.fechaFinal,10,
-				                                                          this.llenarPaqueteDeAtracciones());
-		promocionPorcentual.setCostoTotalAtracciones(190);
+		PromocionPorcentual promocionPorcentual = new PromocionPorcentual(
+				this.Fechainicio, this.fechaFinal,10,this.listaDeatracciones);
 		
-		Assert.assertTrue(promocionPorcentual.DevolverPromocion(jose, this.llenarPaqueteDeAtracciones()));
-		
-		Assert.assertEquals(jose.getPresupuesto(), 519, 0);
-		
-		Assert.assertFalse(promocionPorcentual.DevolverPromocion(jose, this.atraccionSugerida));
+		Assert.assertTrue(promocionPorcentual.DevolverPromocion(jose, this.listaItinerario));
 		
 		Assert.assertEquals(jose.getPresupuesto(), 519, 0);
+		
+		Assert.assertTrue(promocionPorcentual.DevolverPromocion(jose, this.listaItinerario));
+		
+		Assert.assertEquals(jose.getPresupuesto(), 538, 0);
 	
 	}
 
+	private void configurarFechaFueraDeRango() {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		this.Fechainicio = calendar.getTime();
+		calendar.add(Calendar.DATE, -2);
+		this.fechaFinal = calendar.getTime();
+	}
+	
 	private void configurarFecha() {
 
 		Calendar calendar = Calendar.getInstance();
@@ -60,13 +79,13 @@ public class TestPromocionPorcentual {
 		this.fechaFinal = calendar.getTime();
 	}
 
-	private List<Atraccion> llenarPaqueteDeAtracciones() {
+	
+	private void llenarPaqueteDeAtracciones() {		
 
-		List<Atraccion> paqueteDeAtracciones;
+		this.listaDeatracciones = new LinkedList<Atraccion>();
+		this.listaDeAtraccionesFallida = new LinkedList<Atraccion>();
 
-		this.atraccionSugerida = new LinkedList<Atraccion>();
-
-		paqueteDeAtracciones = new LinkedList<Atraccion>();
+		listaItinerario = new Itinerario();
 
 		PosicionPorCoordenadas posicionMordor = new PosicionPorCoordenadas(10,
 				10);
@@ -85,15 +104,18 @@ public class TestPromocionPorcentual {
 
 		Atraccion gondor = new Atraccion(posicionGondor, 90, 20, 30,
 				TipoDeAtraccion.aventura);
-		paqueteDeAtracciones.add(mordor);
-		paqueteDeAtracciones.add(comarca);
-		this.atraccionSugerida.add(mordor);
-		this.atraccionSugerida.add(gondor);
-		this.atraccionSugerida.add(comarca);
+		
+		listaItinerario.agregarAtraccion(mordor);
+		listaItinerario.agregarAtraccion(comarca);		
+		
+		this.listaDeatracciones.add(mordor);		
+		this.listaDeatracciones.add(comarca);
+		
+		this.listaDeAtraccionesFallida.add(comarca);
+		this.listaDeAtraccionesFallida.add(gondor);
 
-		return paqueteDeAtracciones;
+	
 
 	}
-
 
 }

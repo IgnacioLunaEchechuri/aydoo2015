@@ -2,15 +2,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestPromocionAxB {
 
-	private List<Atraccion> atraccionSugerida;
-	private List<Atraccion> atraccionSugeridas;
-	private Atraccion atraccion;
+	private List<Atraccion> listaDeatracciones;
+	private List<Atraccion> listaDeAtraccionesFallida;
+	private Itinerario listaItinerario;
 	Date Fechainicio = new Date();
 	Date fechaFinal = new Date();
 
@@ -18,50 +17,47 @@ public class TestPromocionAxB {
 	public void testValidarPromocion() {
 		this.configurarFecha();
 
+		this.llenarPaqueteDeAtracciones();
+	
 		PromocionAxB promocionAxB = new PromocionAxB(this.Fechainicio,
-				this.fechaFinal,this.getAtraccionGratis(), this.llenarPaqueteDeAtracciones());
+				this.fechaFinal,this.getAtraccionGratis(), this.listaDeatracciones);
 		
-		Assert.assertTrue(promocionAxB.validarPromocion(this.llenarPaqueteDeAtracciones()));
+		Assert.assertTrue(promocionAxB.validarPromocion(this.listaItinerario));
 
-		promocionAxB.setListaDeAtracciones(this.atraccionSugerida);
-		Assert.assertFalse(promocionAxB.validarPromocion(this.llenarPaqueteDeAtracciones()));
+		promocionAxB.setListaDeAtracciones(this.listaDeAtraccionesFallida);
+		Assert.assertFalse(promocionAxB.validarPromocion(this.listaItinerario));
 		
-		promocionAxB.setListaDeAtracciones(this.atraccionSugeridas);
-		Assert.assertFalse(promocionAxB.validarPromocion(this.llenarPaqueteDeAtracciones()));
+		promocionAxB.setListaDeAtracciones(this.listaDeAtraccionesFallida);
+		Assert.assertFalse(promocionAxB.validarPromocion(this.listaItinerario));
 		
 		this.configurarFechaFueraDeRango();
 		
-		PromocionAbsoluta promocionAxBFueraDeFecha = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
-				this.llenarPaqueteDeAtracciones(), 20);
 		
-		Assert.assertFalse(promocionAxBFueraDeFecha.validarPromocion(this.llenarPaqueteDeAtracciones()));
+		PromocionAxB promocionAxBFueraDeFecha = new PromocionAxB(this.Fechainicio,
+				this.fechaFinal,this.getAtraccionGratis(), this.listaDeatracciones);
 		
-		Assert.assertFalse(promocionAxBFueraDeFecha.validarPromocion(this.atraccionSugerida));
-	
-	
+		Assert.assertFalse(promocionAxBFueraDeFecha.validarPromocion(this.listaItinerario));
+		
 	}
 	
 	@Test
 	public void testAplicarPromocion() {
 		this.configurarFecha();
-		
+		this.llenarPaqueteDeAtracciones();
 		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 10);
 		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,posicion);
 		
 		PromocionAxB promocionAxB = new PromocionAxB(this.Fechainicio,
-				this.fechaFinal,this.getAtraccionGratis(), this.llenarPaqueteDeAtracciones());
+				this.fechaFinal,this.getAtraccionGratis(), this.listaDeatracciones);
 		
-	Assert.assertEquals(this.llenarPaqueteDeAtracciones().size(), 2,0);	
+	Assert.assertEquals(this.listaItinerario.tamanoItinerario(), 2,0);	
 	
-	Assert.assertTrue(promocionAxB.DevolverPromocion(jose, this.llenarPaqueteDeAtracciones()));
-
-	Assert.assertEquals(promocionAxB.devolverListaModificada().size(), 3,0);
+	Assert.assertTrue(promocionAxB.DevolverPromocion(jose, this.listaItinerario));
 	
-	promocionAxB.agregarAtraccion(atraccion);
+	Assert.assertEquals(this.listaItinerario.tamanoItinerario(), 3,0);		
 	
-	Assert.assertFalse(promocionAxB.DevolverPromocion(jose, this.llenarPaqueteDeAtracciones()));
+	}
 	
-		}
 
 	private void configurarFechaFueraDeRango() {
 
@@ -89,14 +85,12 @@ public class TestPromocionAxB {
 		return atraccion;
 	}
 
-	private List<Atraccion> llenarPaqueteDeAtracciones() {
+	private void llenarPaqueteDeAtracciones() {		
 
-		List<Atraccion> paqueteDeAtracciones;
+		this.listaDeatracciones = new LinkedList<Atraccion>();
+		this.listaDeAtraccionesFallida = new LinkedList<Atraccion>();
 
-		this.atraccionSugerida = new LinkedList<Atraccion>();
-		this.atraccionSugeridas = new LinkedList<Atraccion>();
-
-		paqueteDeAtracciones = new LinkedList<Atraccion>();
+		listaItinerario = new Itinerario();
 
 		PosicionPorCoordenadas posicionMordor = new PosicionPorCoordenadas(10,
 				10);
@@ -116,16 +110,16 @@ public class TestPromocionAxB {
 		Atraccion gondor = new Atraccion(posicionGondor, 90, 20, 30,
 				TipoDeAtraccion.aventura);
 		
-		paqueteDeAtracciones.add(mordor);
-		paqueteDeAtracciones.add(comarca);
+		listaItinerario.agregarAtraccion(mordor);
+		listaItinerario.agregarAtraccion(comarca);
 		
-		this.atraccion=comarca;
-		this.atraccionSugerida.add(mordor);
-		this.atraccionSugerida.add(gondor);
-		this.atraccionSugerida.add(comarca);
-		this.atraccionSugeridas.add(mordor);
+		this.listaDeatracciones.add(mordor);		
+		this.listaDeatracciones.add(comarca);
+		
+		this.listaDeAtraccionesFallida.add(comarca);
+		this.listaDeAtraccionesFallida.add(gondor);
 
-		return paqueteDeAtracciones;
+	
 
 	}
 
