@@ -1,0 +1,10 @@
+Supuestos
+
+El visitante puede comenzar de cualquier punto (x,y)
+La velocidad del visitante se mide en metros/minutos
+El tiempo se mide en minutos
+Las distancia se mide en metros
+Las Promociones no son acumulables
+El itinerario se escoge por las preferencias del visitante
+
+
