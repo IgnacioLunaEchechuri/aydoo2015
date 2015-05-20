@@ -4,6 +4,14 @@ import org.junit.Test;
 public class TestAtraccion {
 
 	@Test
+	public void tesCapacidad() {
+		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 100);
+		Atraccion atraccion=new Atraccion(posicion,1200,30,20,TipoDeAtraccion.aventura);
+		Assert.assertTrue(atraccion.comprobarCapacidad(29));
+                Assert.assertFalse(atraccion.comprobarCapacidad(31));
+		
+        }
+	@Test
 	public void testPosicion() {
 		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 100);
 		Atraccion atraccion=new Atraccion(posicion,1200,30,20,TipoDeAtraccion.aventura);
