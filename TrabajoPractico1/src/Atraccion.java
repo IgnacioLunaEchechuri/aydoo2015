@@ -64,9 +64,29 @@ public class Atraccion {
 	public void setTipoDeAtraccion(TipoDeAtraccion tipoDeAtraccion) {
 		this.tipoDeAtraccion = tipoDeAtraccion;
 	}
+
+	public boolean compararAtracciones(Atraccion atraccionSugerida) {
+		
+		return ((atraccionSugerida.getPosicion().getLatitud() == this
+				.getPosicion().getLatitud()) && (atraccionSugerida
+				.getPosicion().getLongitud() == this.getPosicion()
+				.getLongitud()));
+	}
+	
+	public float devolverTiempo(Usuario usuario) {
+
+		float distanciaUsuarioAtraccion = CalcularDistanciaYTiempo
+				.calcularDistancia(usuario.getPosicion(),
+						this.getPosicion());
+
+		return CalcularDistanciaYTiempo
+				.devolverTiempoDeRecorridoMasTiempoAtraccion(
+						distanciaUsuarioAtraccion,
+						usuario.getVelocidadTranslado(),
+						this.getTiempoDelRecorrido());
+	}
 	public boolean comprobarTipoAtraccionUsuario(Usuario usuario){
 		return usuario.getAtracccionPreferida().equals(this.getTipoDeAtraccion());
 	}
 	
-
 }

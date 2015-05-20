@@ -11,57 +11,106 @@ public class TestPromocionAbsoluta {
 	private List<Atraccion> listaDeatracciones;
 	private List<Atraccion> listaDeAtraccionesFallida;
 	private Itinerario listaItinerario;
-	
+
 	Date Fechainicio = new Date();
 	Date fechaFinal = new Date();
 
 	@Test
-	public void testValidarPromocion() {
+	public void ValidarAplicarPromocion() {
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
-		PromocionAbsoluta promocionAbsoluta = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
-				this.listaDeatracciones, 20);
-					
-		Assert.assertTrue(promocionAbsoluta.validarPromocion(this.listaItinerario));
-		
-		promocionAbsoluta.setListaDeAtracciones(this.listaDeAtraccionesFallida);
-		Assert.assertFalse(promocionAbsoluta.validarPromocion(this.listaItinerario));
-		
-		this.configurarFechaFueraDeRango();
-		
-		PromocionAbsoluta promocionAbsolutaFueraDeFecha = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
-				this.listaDeatracciones, 20);
-		
-		Assert.assertFalse(promocionAbsolutaFueraDeFecha.validarPromocion(this.listaItinerario));
-		
-		
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal, this.listaDeatracciones, 20);
+
+		boolean estadoPromocion = promocionAbsoluta.getAplicarPromocion();
+		Assert.assertFalse(estadoPromocion);
+
+		promocionAbsoluta.setAplicarPromocion(true);
+		estadoPromocion = promocionAbsoluta.getAplicarPromocion();
+		Assert.assertTrue(estadoPromocion);
+
 	}
 
-		
-	
-
 	@Test
-	public void testDevolverDinero() {
+	public void ValidarConFechasValidas() {
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
-		
-		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 10);
-		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,posicion);
-				
-		PromocionAbsoluta promocionAbsoluta = new PromocionAbsoluta(this.Fechainicio, this.fechaFinal,
-				this.listaDeatracciones, 20);
-		
-		Assert.assertEquals(jose.getPresupuesto(),1000,0);
-		
-		promocionAbsoluta.DevolverPromocion(jose, this.listaItinerario);
 
-		Assert.assertEquals(jose.getPresupuesto(), 1020, 0);
-		
-		Assert.assertTrue(promocionAbsoluta.DevolverPromocion(jose, this.listaItinerario));
-		
-		Assert.assertEquals(jose.getPresupuesto(), 1040, 0);
-	
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal, this.listaDeatracciones, 20);
+		boolean validarFechas = promocionAbsoluta.validarFechaPromocion();
+		Assert.assertTrue(validarFechas);
+	}
+
+	@Test
+	public void ValidarConFechasInvalidas() {
+
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFechaFueraDeRango();
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal, this.listaDeatracciones, 20);
+
+		boolean validarFechas = promocionAbsoluta.validarFechaPromocion();
+
+		Assert.assertFalse(validarFechas);
+	}
+
+	@Test
+	public void AplicarPromocionConFechasInvalidas() {
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFechaFueraDeRango();
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 4);
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal, this.listaDeatracciones, 20);
+
+		boolean validarDevolverPromocion = promocionAbsoluta.devolverPromocion(
+				jose, this.listaItinerario);
+
+		Assert.assertFalse(validarDevolverPromocion);
+	}
+
+	@Test
+	public void AplicarPromocionConFechasValidas() {
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFecha();
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 4);
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal, this.listaDeatracciones, 20);
+
+		boolean validarDevolverPromocion = promocionAbsoluta.devolverPromocion(
+				jose, this.listaItinerario);
+
+		Assert.assertTrue(validarDevolverPromocion);
+	}
+
+	@Test
+	public void AtraccionesIncluidasEnPromocionValidas() {
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFecha();
+
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal, this.listaDeatracciones, 20);
+		boolean validarDevolverPromocion = ((PromocionAbsoluta) promocionAbsoluta)
+				.validarAtraccionesdeLaPromocion(listaItinerario);
+
+		Assert.assertTrue(validarDevolverPromocion);
+	}
+
+	@Test
+	public void AtraccionesIncluidasEnPromocionInvalidas() {
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFecha();
+
+		Promocion promocionAbsoluta = new PromocionAbsoluta(
+				this.Fechainicio, this.fechaFinal,
+				this.listaDeAtraccionesFallida, 20);
+		boolean validarDevolverPromocion = ((PromocionAbsoluta) promocionAbsoluta)
+				.validarAtraccionesdeLaPromocion(listaItinerario);
+
+		Assert.assertFalse(validarDevolverPromocion);
 	}
 
 	private void configurarFechaFueraDeRango() {
@@ -72,7 +121,7 @@ public class TestPromocionAbsoluta {
 		calendar.add(Calendar.DATE, -2);
 		this.fechaFinal = calendar.getTime();
 	}
-	
+
 	private void configurarFecha() {
 
 		Calendar calendar = Calendar.getInstance();
@@ -82,8 +131,13 @@ public class TestPromocionAbsoluta {
 		this.fechaFinal = calendar.getTime();
 	}
 
-	
-	private void llenarPaqueteDeAtracciones() {		
+	private PosicionPorCoordenadas getPosicionUsuario() {
+		PosicionPorCoordenadas posicionUsuario = new PosicionPorCoordenadas(10,
+				10);
+		return posicionUsuario;
+	}
+
+	private void llenarPaqueteDeAtracciones() {
 
 		this.listaDeatracciones = new LinkedList<Atraccion>();
 		this.listaDeAtraccionesFallida = new LinkedList<Atraccion>();
@@ -107,17 +161,15 @@ public class TestPromocionAbsoluta {
 
 		Atraccion gondor = new Atraccion(posicionGondor, 90, 20, 30,
 				TipoDeAtraccion.aventura);
-		
+
 		listaItinerario.agregarAtraccion(mordor);
-		listaItinerario.agregarAtraccion(comarca);		
-		
-		this.listaDeatracciones.add(mordor);		
+		listaItinerario.agregarAtraccion(comarca);
+
+		this.listaDeatracciones.add(mordor);
 		this.listaDeatracciones.add(comarca);
-		
+
 		this.listaDeAtraccionesFallida.add(comarca);
 		this.listaDeAtraccionesFallida.add(gondor);
-
-	
 
 	}
 

@@ -1,14 +1,14 @@
 
 public class PosicionPorCoordenadas {
-	
+	private float longitud,latitud;
+
 	public PosicionPorCoordenadas (int latitud,int longitud) {
 		this.latitud=latitud;
 		this.longitud=longitud;
 	}
 	
 	
-	private float longitud,latitud;
-
+	
 	public float getLongitud() {
 		return longitud;
 	}

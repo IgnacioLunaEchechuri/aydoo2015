@@ -4,28 +4,30 @@ public class Usuario {
 	private float tiempoDisponible;
 	private TipoDeAtraccion atracccionPreferida;
 	private PosicionPorCoordenadas posicion;
+	private int cantidadDeEntradas;
 
 	public Usuario(float presupuesto, float velocidadDeTranslado,
-			int tiempoDisponible, TipoDeAtraccion atracccionPreferida,
-			PosicionPorCoordenadas posicion) {
+			float tiempoDisponible, TipoDeAtraccion atracccionPreferida,
+			PosicionPorCoordenadas posicion, int cantidadDeEntradas) {
 
 		this.presupuesto = presupuesto;
 		this.velocidadDeTransaldo = velocidadDeTranslado;
 		this.tiempoDisponible = tiempoDisponible;
 		this.atracccionPreferida = atracccionPreferida;
 		this.posicion = posicion;
+		this.cantidadDeEntradas = cantidadDeEntradas;
+		
 	}
 
-	public boolean consultaTiempoDisponible(float tiempoRecorridoAtraccion)
-	 {
-		return ((this.getTiempoDisponible() > tiempoRecorridoAtraccion)||(this.getTiempoDisponible() == tiempoRecorridoAtraccion));
+	public boolean consultaTiempoDisponible(float tiempoRecorridoAtraccion) {
+		return ((this.getTiempoDisponible() > tiempoRecorridoAtraccion) || (this
+				.getTiempoDisponible() == tiempoRecorridoAtraccion));
 	}
-	
-	public boolean consultaPresupuestoDisponible(float costoAtraccion)
-	 {
-		return ((this.presupuesto > costoAtraccion)||(this.presupuesto == costoAtraccion));
+
+		public boolean consultaPresupuestoDisponible(float costoAtraccion) {
+		return ((this.presupuesto > costoAtraccion) || (this.presupuesto == costoAtraccion));
 	}
-	
+
 	public void sumarAlPresupuesto(float dineroADevolver) {
 		this.presupuesto += dineroADevolver;
 	}
@@ -76,6 +78,14 @@ public class Usuario {
 
 	public void setPresupuesto(float presupuesto) {
 		this.presupuesto = presupuesto;
+	}
+
+	public int getCantidadDeEntradas() {
+		return cantidadDeEntradas;
+	}
+
+	public void setCantidadDeEntradas(int cantidadDeEntradas) {
+		this.cantidadDeEntradas = cantidadDeEntradas;
 	}
 
 }

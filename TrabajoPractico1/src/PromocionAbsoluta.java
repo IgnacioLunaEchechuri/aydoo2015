@@ -3,12 +3,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PromocionAbsoluta implements Promociones {
+public class PromocionAbsoluta implements Promocion {
 
 	private float valorPromocion;
 	private Date fechaInicio;
 	private Date fechaFinal;
 	private List<Atraccion> listaDeAtracciones = new LinkedList<Atraccion>();
+	private boolean promocionAplicada;
+	private int identificadorPromocion;
 
 	public PromocionAbsoluta(Date fechaInicio, Date fechaFinal,
 			List<Atraccion> listaDeAtracciones, float valorPromocion) {
@@ -16,44 +18,21 @@ public class PromocionAbsoluta implements Promociones {
 		this.fechaFinal = fechaFinal;
 		this.valorPromocion = valorPromocion;
 		this.listaDeAtracciones = listaDeAtracciones;
-	}
-
-	public Date getFechaFinal() {
-		return fechaFinal;
-	}
-
-	public void setFechaFinal(Date fechaFinal) {
-		this.fechaFinal = fechaFinal;
-	}
-
-	public Date getFechaInicio() {
-		return fechaInicio;
-
-	}
-	
-	public void setListaDeAtracciones(List<Atraccion> listaDeAtracciones) {
-		this.listaDeAtracciones=listaDeAtracciones;
-		
-	}
-
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public List<Atraccion> getListaDeAtracciones() {
-		return listaDeAtracciones;
-	}
-
-	
-	public void setValorPromocion(float devolucionDinero) {
-		this.valorPromocion = devolucionDinero;
+		this.promocionAplicada=false;
+		this.identificadorPromocion=2;
 	}
 
 	@Override
-	public boolean DevolverPromocion(Usuario usuario,Itinerario listaItinerario) {
+	public int getIdentificadorPromocion() {
 
-		boolean confirmarPromocion=false;
-		if (this.validarPromocion(listaItinerario)){
+		return this.identificadorPromocion;
+	}
+
+	@Override
+	public boolean devolverPromocion(Usuario usuario, Itinerario listaItinerario) {
+
+		boolean confirmarPromocion = false;
+		if (this.validarAtraccionesdeLaPromocion(listaItinerario)) {
 			usuario.sumarAlPresupuesto(this.valorPromocion);
 			confirmarPromocion = true;
 		} else
@@ -61,44 +40,57 @@ public class PromocionAbsoluta implements Promociones {
 
 		return confirmarPromocion;
 	}
-	
-	
 
-	public boolean ValidarFechaPromocion() {
+	@Override
+	public boolean validarFechaPromocion() {
 		Date fechaActual = new Date();
-		boolean validar = (fechaActual.after(this.fechaInicio) && fechaActual
+
+		return (fechaActual.after(this.fechaInicio) && fechaActual
 				.before(this.fechaFinal));
 
-		return validar;
-
 	}
 
-	public boolean validarPromocion(Itinerario listaItinerario) {
-		Boolean validacion = false, validarFecha = this.ValidarFechaPromocion();
+	public boolean validarAtraccionesdeLaPromocion(Itinerario listaItinerario) {
+		Boolean validarFecha = this.validarFechaPromocion();
 		Atraccion atraccionPaquete = null, atraccionSugerida = null;
-		if ((listaItinerario.tamanoItinerario() == this.listaDeAtracciones.size()) && (validarFecha)) {
+		int contadorAtraccionesEncontradas = 0;
 
-			Iterator<Atraccion> iteradorListaDeAtracciones = this.listaDeAtracciones.iterator();
-			Iterator<Atraccion> iteradorItinerario = listaItinerario.getItinerario().iterator();
-			
-			while (iteradorListaDeAtracciones.hasNext())
-				atraccionPaquete = iteradorListaDeAtracciones.next();{
+		if ((listaItinerario.tamanoItinerario() == this.listaDeAtracciones
+				.size()) && (validarFecha)) {
 
-					while (iteradorItinerario.hasNext()) {
-						atraccionSugerida = iteradorItinerario.next();
-						if ((atraccionSugerida.getPosicion().getLatitud() == atraccionPaquete.getPosicion().getLatitud())
-						&& (atraccionSugerida.getPosicion().getLongitud() == atraccionPaquete.getPosicion().getLongitud())) {
+			Iterator<Atraccion> iteradorListaDeAtracciones = this.listaDeAtracciones
+					.iterator();
 
-					        validacion = true;
-			        	} else
-					       validacion = false;
+			while (iteradorListaDeAtracciones.hasNext()) {
 
-			        }
-     		}
+				atraccionPaquete = iteradorListaDeAtracciones.next();
+				Iterator<Atraccion> iteradorItinerario = listaItinerario
+						.getItinerario().iterator();
+
+				while (iteradorItinerario.hasNext()) {
+					atraccionSugerida = iteradorItinerario.next();
+
+					if (atraccionPaquete.compararAtracciones(atraccionSugerida))
+						contadorAtraccionesEncontradas++;
+
+				}
+			}
 		}
-		return validacion;
+		return contadorAtraccionesEncontradas == listaItinerario
+				.tamanoItinerario();
 
 	}
 
+	@Override
+	public boolean getAplicarPromocion() {
+
+		return this.promocionAplicada;
+	}
+
+	@Override
+	public void setAplicarPromocion(boolean cambiarEstado) {
+		this.promocionAplicada = cambiarEstado;
+
+	}
 
 }
