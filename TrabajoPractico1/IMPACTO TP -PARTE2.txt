@@ -1,0 +1,13 @@
+Impacto de Cambio en el Trabajo Practico
+
+-Se hicieron los cambios recomendados por el feedback De Diego
+
+-Para realizar la segunda parte del tp se realizo:
+    -Se crearor 2 nuevas  clases PromocionFamilia y PromocionExtranjero.
+    - una clase aplicadorDePromociones que resuelve cuando se ejecuta las 
+      las promociones acumulables y no acumulables.
+    - A todas Las promociones se les agrego un numeroidentificador(int) y un
+      boolean para saber si fue aplicada o no;
+    - A la clase Usuario Se le agrego una variable cantidadDeEntradas 
+      (con sus respectivos getter y setter)que va a necesitar
+      en las atracciones que va a visitar.	
