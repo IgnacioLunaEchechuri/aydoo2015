@@ -28,7 +28,20 @@ public class Itinerario {
 		
 		return itinerario.size();
 	}
-	
+	public float tiempoTotalItinerario(){
+		Atraccion atraccion;
+		float tiempoTotal=0;
+		
+		Iterator<Atraccion> iteradorItinerario = this.itinerario.iterator();
+
+		while (iteradorItinerario.hasNext()) {
+				atraccion = iteradorItinerario.next();
+				tiempoTotal+=atraccion.getTiempoDelRecorrido();
+	     }
+		
+		return tiempoTotal;
+	     }
+
 	public float costoTotalItinerario(){
 	Atraccion atraccion;
 	float costoTotal=0;

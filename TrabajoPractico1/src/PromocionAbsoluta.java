@@ -1,5 +1,4 @@
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,8 +8,6 @@ public class PromocionAbsoluta implements Promocion {
 	private Date fechaInicio;
 	private Date fechaFinal;
 	private List<Atraccion> listaDeAtracciones = new LinkedList<Atraccion>();
-	private boolean promocionAplicada;
-	private int identificadorPromocion;
 
 	public PromocionAbsoluta(Date fechaInicio, Date fechaFinal,
 			List<Atraccion> listaDeAtracciones, float valorPromocion) {
@@ -18,31 +15,19 @@ public class PromocionAbsoluta implements Promocion {
 		this.fechaFinal = fechaFinal;
 		this.valorPromocion = valorPromocion;
 		this.listaDeAtracciones = listaDeAtracciones;
-		this.promocionAplicada=false;
-		this.identificadorPromocion=2;
 	}
 
 	@Override
-	public int getIdentificadorPromocion() {
+	public void aplicarPromocion(Usuario usuario, Itinerario listaItinerario,
+			boolean estadoPromocionAcumulable) {
 
-		return this.identificadorPromocion;
-	}
-
-	@Override
-	public boolean devolverPromocion(Usuario usuario, Itinerario listaItinerario) {
-
-		boolean confirmarPromocion = false;
-		if (this.validarAtraccionesdeLaPromocion(listaItinerario)) {
+		if ((this.encontradoAtraccionesdeLaPromocionEnItinerario(listaItinerario))
+				&& estadoPromocionAcumulable)
 			usuario.sumarAlPresupuesto(this.valorPromocion);
-			confirmarPromocion = true;
-		} else
-			confirmarPromocion = false;
-
-		return confirmarPromocion;
 	}
 
 	@Override
-	public boolean validarFechaPromocion() {
+	public boolean estadoFechaDePromocionValida() {
 		Date fechaActual = new Date();
 
 		return (fechaActual.after(this.fechaInicio) && fechaActual
@@ -50,47 +35,18 @@ public class PromocionAbsoluta implements Promocion {
 
 	}
 
-	public boolean validarAtraccionesdeLaPromocion(Itinerario listaItinerario) {
-		Boolean validarFecha = this.validarFechaPromocion();
-		Atraccion atraccionPaquete = null, atraccionSugerida = null;
+	public boolean encontradoAtraccionesdeLaPromocionEnItinerario(
+			Itinerario listaItinerario) {
+
 		int contadorAtraccionesEncontradas = 0;
 
-		if ((listaItinerario.tamanoItinerario() == this.listaDeAtracciones
-				.size()) && (validarFecha)) {
+		for (Atraccion sugerida : listaItinerario.getItinerario())
+			for (Atraccion promocion : this.listaDeAtracciones)
+				if (promocion.comparadoAtracciones(sugerida))
+					contadorAtraccionesEncontradas++;
 
-			Iterator<Atraccion> iteradorListaDeAtracciones = this.listaDeAtracciones
-					.iterator();
-
-			while (iteradorListaDeAtracciones.hasNext()) {
-
-				atraccionPaquete = iteradorListaDeAtracciones.next();
-				Iterator<Atraccion> iteradorItinerario = listaItinerario
-						.getItinerario().iterator();
-
-				while (iteradorItinerario.hasNext()) {
-					atraccionSugerida = iteradorItinerario.next();
-
-					if (atraccionPaquete.compararAtracciones(atraccionSugerida))
-						contadorAtraccionesEncontradas++;
-
-				}
-			}
-		}
-		return contadorAtraccionesEncontradas == listaItinerario
-				.tamanoItinerario();
-
-	}
-
-	@Override
-	public boolean getAplicarPromocion() {
-
-		return this.promocionAplicada;
-	}
-
-	@Override
-	public void setAplicarPromocion(boolean cambiarEstado) {
-		this.promocionAplicada = cambiarEstado;
-
+		return (contadorAtraccionesEncontradas == this.listaDeAtracciones
+				.size()) && (this.estadoFechaDePromocionValida());
 	}
 
 }

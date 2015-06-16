@@ -26,7 +26,7 @@ public class GeneradorDelItinerario {
 
 	}
 
-	public boolean getEstadoGeneradorItinerario() {
+	public boolean estadoGeneradorItinerario() {
 		return estadoGeneradorItinerario;
 	}
 	
@@ -43,14 +43,13 @@ public class GeneradorDelItinerario {
 
 			atraccion = iteradorListaDeAtracciones.next();
 
-			tiempoDeDesplazamientoHaciaLaAtraccion = atraccion
-					.devolverTiempo(usuarioCopia);
+			tiempoDeDesplazamientoHaciaLaAtraccion = usuario.devolverTiempoDeRecorridoMasTiempoAtraccion(atraccion.getPosicion(), 0);
 
 			if ((usuarioCopia
-					.consultaTiempoDisponible(tiempoDeDesplazamientoHaciaLaAtraccion) && (usuarioCopia
-					.consultaPresupuestoDisponible(atraccion.getPrecio())))
-					&& (atraccion.comprobarCapacidad(usuarioCopia.getCantidadDeEntradas()))
-					&& (atraccion.comprobarTipoAtraccionUsuario(usuarioCopia))) {
+					.estadoTiempoDisponible(tiempoDeDesplazamientoHaciaLaAtraccion) && (usuarioCopia
+					.estadoPresupuestoDisponible(atraccion.getPrecio())))
+					&& (atraccion.estadoCapacidad(usuarioCopia.getCantidadDeEntradas()))
+					&& (atraccion.comprobadoTipoAtraccionPreferidaPorUsuario(usuarioCopia))) {
 
 				this.estadoGeneradorItinerario = true;
 				this.listaItinerario.agregarAtraccion(atraccion);

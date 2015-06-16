@@ -4,11 +4,11 @@ import org.junit.Test;
 public class TestAtraccion {
 
 	@Test
-	public void tesCapacidad() {
+	public void testCapacidad() {
 		PosicionPorCoordenadas posicion = new PosicionPorCoordenadas(10, 100);
 		Atraccion atraccion=new Atraccion(posicion,1200,30,20,TipoDeAtraccion.aventura);
-		Assert.assertTrue(atraccion.comprobarCapacidad(29));
-                Assert.assertFalse(atraccion.comprobarCapacidad(31));
+		Assert.assertTrue(atraccion.estadoCapacidad(29));
+                Assert.assertFalse(atraccion.estadoCapacidad(31));
 		
         }
 	@Test

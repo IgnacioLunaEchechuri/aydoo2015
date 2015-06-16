@@ -15,7 +15,7 @@ public class Atraccion {
 
 	}
 
-	public boolean comprobarCapacidad(int cantidadDeVisitantes) {
+	public boolean estadoCapacidad(int cantidadDeVisitantes) {
 		return this.getCapacidadDeVisitantes() >= cantidadDeVisitantes;
 
 	}
@@ -65,7 +65,7 @@ public class Atraccion {
 		this.tipoDeAtraccion = tipoDeAtraccion;
 	}
 
-	public boolean compararAtracciones(Atraccion atraccionSugerida) {
+	public boolean comparadoAtracciones(Atraccion atraccionSugerida) {
 		
 		return ((atraccionSugerida.getPosicion().getLatitud() == this
 				.getPosicion().getLatitud()) && (atraccionSugerida
@@ -73,20 +73,10 @@ public class Atraccion {
 				.getLongitud()));
 	}
 	
-	public float devolverTiempo(Usuario usuario) {
-
-		float distanciaUsuarioAtraccion = CalcularDistanciaYTiempo
-				.calcularDistancia(usuario.getPosicion(),
-						this.getPosicion());
-
-		return CalcularDistanciaYTiempo
-				.devolverTiempoDeRecorridoMasTiempoAtraccion(
-						distanciaUsuarioAtraccion,
-						usuario.getVelocidadTranslado(),
-						this.getTiempoDelRecorrido());
-	}
-	public boolean comprobarTipoAtraccionUsuario(Usuario usuario){
-		return usuario.getAtracccionPreferida().equals(this.getTipoDeAtraccion());
+	
+	public boolean comprobadoTipoAtraccionPreferidaPorUsuario(Usuario usuario){
+	 return usuario.getAtracccionPreferida().equals(this.getTipoDeAtraccion());
+		 
 	}
 	
 }

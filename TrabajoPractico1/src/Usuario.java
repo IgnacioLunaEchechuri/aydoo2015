@@ -16,24 +16,26 @@ public class Usuario {
 		this.atracccionPreferida = atracccionPreferida;
 		this.posicion = posicion;
 		this.cantidadDeEntradas = cantidadDeEntradas;
-		
+
 	}
 
-	public boolean consultaTiempoDisponible(float tiempoRecorridoAtraccion) {
+	public boolean estadoTiempoDisponible(float tiempoRecorridoAtraccion) {
 		return ((this.getTiempoDisponible() > tiempoRecorridoAtraccion) || (this
 				.getTiempoDisponible() == tiempoRecorridoAtraccion));
 	}
 
-		public boolean consultaPresupuestoDisponible(float costoAtraccion) {
+	public boolean estadoPresupuestoDisponible(float costoAtraccion) {
 		return ((this.presupuesto > costoAtraccion) || (this.presupuesto == costoAtraccion));
 	}
 
 	public void sumarAlPresupuesto(float dineroADevolver) {
 		this.presupuesto += dineroADevolver;
+		
 	}
 
 	public void restarDelPresupuesto(float dineroADescontar) {
 		this.presupuesto -= dineroADescontar;
+		 
 	}
 
 	public void restartiempo(float tiempoParaDescontar) {
@@ -88,4 +90,24 @@ public class Usuario {
 		this.cantidadDeEntradas = cantidadDeEntradas;
 	}
 
+	public float devolverTiempoDeRecorridoMasTiempoAtraccion(
+			PosicionPorCoordenadas posicionAtraccion, float tiempoAtraccion) {
+		float distaciaARecorrer = this.calcularDistancia(posicionAtraccion);
+		float tiempo;
+		if (distaciaARecorrer == 0)
+			tiempo = 0;
+		else
+			tiempo = this.getVelocidadTranslado() / distaciaARecorrer;
+		return tiempo + tiempoAtraccion;
+	}
+
+	public float calcularDistancia(PosicionPorCoordenadas posicionAtraccion) {
+		float distancia = (float) Math.sqrt(Math.pow(
+				posicionAtraccion.getLatitud()
+						- this.getPosicion().getLatitud(), 2)
+				+ Math.pow(posicionAtraccion.getLongitud()
+						- this.getPosicion().getLongitud(), 2));
+
+		return distancia;
+	}
 }

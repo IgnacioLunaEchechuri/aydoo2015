@@ -15,7 +15,7 @@ public class TestGeneradorDelItinerario {
 	Date fechaFinal = new Date();
 
 	@Test
-	public void GenerarItineratrioValido() {
+	public void generarItineratrioValido() {
 
 		this.llenarPaqueteDeAtracciones();
 
@@ -25,11 +25,12 @@ public class TestGeneradorDelItinerario {
 		GeneradorDelItinerario generadorItinerario = new GeneradorDelItinerario();
 		generadorItinerario.generarItinerarioPorPreferencias(jose,
 				listaDeAtraccionesTresAtracciones);
-		Assert.assertTrue(generadorItinerario.getEstadoGeneradorItinerario());
+		Assert.assertTrue(generadorItinerario.estadoGeneradorItinerario());
+		Assert.assertEquals(3, generadorItinerario.getListaItinerario().tamanoItinerario(),0);
 	}
 
 	@Test
-	public void GenerarItineratrioInvalidoPorTiempoNoDisponible() {
+	public void generarItineratrioInvalidoPorTiempoNoDisponible() {
 
 		this.llenarPaqueteDeAtracciones();
 
@@ -39,11 +40,13 @@ public class TestGeneradorDelItinerario {
 		GeneradorDelItinerario generadorItinerario = new GeneradorDelItinerario();
 		generadorItinerario.generarItinerarioPorPreferencias(jose,
 				listaDeAtraccionesTresAtracciones);
-		Assert.assertFalse(generadorItinerario.getEstadoGeneradorItinerario());
+		Assert.assertFalse(generadorItinerario.estadoGeneradorItinerario());
+		Assert.assertEquals(0, generadorItinerario.getListaItinerario().tamanoItinerario(), 0);
+
 	}
 
 	@Test
-	public void GenerarItineratrioInvalidoPorNoDisponibilidadDePresupuesto() {
+	public void generarItineratrioInvalidoPorNoDisponibilidadDePresupuesto() {
 
 		this.llenarPaqueteDeAtracciones();
 
@@ -53,7 +56,9 @@ public class TestGeneradorDelItinerario {
 		GeneradorDelItinerario generadorItinerario = new GeneradorDelItinerario();
 		generadorItinerario.generarItinerarioPorPreferencias(jose,
 				listaDeAtraccionesTresAtracciones);
-		Assert.assertFalse(generadorItinerario.getEstadoGeneradorItinerario());
+		Assert.assertFalse(generadorItinerario.estadoGeneradorItinerario());
+		Assert.assertEquals(0, generadorItinerario.getListaItinerario().tamanoItinerario(), 0);
+
 	}
 
 	

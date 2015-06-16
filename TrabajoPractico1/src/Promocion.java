@@ -1,14 +1,14 @@
 public interface Promocion {
 	
 
-	public abstract boolean devolverPromocion(Usuario usuario,
-			Itinerario itinerario);
+	public abstract void aplicarPromocion(Usuario usuario,
+			Itinerario itinerario,boolean estadoPromocionAcumulable);
 
-	public abstract boolean validarFechaPromocion();
+	public abstract boolean estadoFechaDePromocionValida();
 	
-	public abstract boolean getAplicarPromocion();
+
 	
-	public abstract void setAplicarPromocion(boolean cambiarEstado);
-	public int getIdentificadorPromocion();
+	
+	
 	
 }

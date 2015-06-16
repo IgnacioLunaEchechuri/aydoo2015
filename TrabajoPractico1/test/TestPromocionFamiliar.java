@@ -15,99 +15,113 @@ public class TestPromocionFamiliar {
 	Date fechaFinal = new Date();
 
 	@Test
-	public void ValidarAplicarPromocion() {
+	public void aplicarPromocionConFechaValida() {
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
 		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
 				this.fechaFinal);
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 4);
+		boolean estadoFechaValida = promocionFamiliar
+				.estadoFechaDePromocionValida();
+		promocionFamiliar.aplicarPromocion(jose, this.listaItinerario, true);
 
-		boolean estadoPromocion = promocionFamiliar.getAplicarPromocion();
-		Assert.assertFalse(estadoPromocion);
-
-		promocionFamiliar.setAplicarPromocion(true);
-		estadoPromocion = promocionFamiliar.getAplicarPromocion();
-		Assert.assertTrue(estadoPromocion);
-
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(), 1044, 0);
 	}
 
 	@Test
-	public void ValidarConFechasValidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-
-		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
-				this.fechaFinal);
-		boolean validarFechas = promocionFamiliar.validarFechaPromocion();
-		Assert.assertTrue(validarFechas);
-	}
-
-	@Test
-	public void ValidarConFechasInvalidas() {
-
+	public void aplicarPromocionConFechaInvalida() {
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFechaFueraDeRango();
 		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
 				this.fechaFinal);
-		
-		boolean validarFechas = promocionFamiliar.validarFechaPromocion();
-
-		Assert.assertFalse(validarFechas);
-	}
-
-	@Test
-	public void AplicarPromocionConFechasInvalidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFechaFueraDeRango();
 		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
 				this.getPosicionUsuario(), 4);
-		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
-				this.fechaFinal);
-		
-		boolean validarDevolverPromocion = promocionFamiliar.devolverPromocion(
-				jose, this.listaItinerario);
+		boolean estadoFechaInvalida = promocionFamiliar
+				.estadoFechaDePromocionValida();
+		promocionFamiliar.aplicarPromocion(jose, this.listaItinerario, true);
 
-		Assert.assertFalse(validarDevolverPromocion);
+		Assert.assertFalse(estadoFechaInvalida);
+		Assert.assertEquals(jose.getPresupuesto(), 1000, 0);
 	}
 
+	
 	@Test
-	public void AplicarPromocionConFechasValidas() {
+	public void aplicarPromocionCuandoNoSonAcumulables(){
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
+
+		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
+				this.fechaFinal);
 		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
 				this.getPosicionUsuario(), 4);
+		boolean estadoFechaValida = promocionFamiliar
+				.estadoFechaDePromocionValida();
+		promocionFamiliar.aplicarPromocion(jose, this.listaItinerario, false);
+
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(), 1000, 0);
+	}
+	
+	@Test
+	public void aplicarPromocionConMasDeCuatroVisitantes(){
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFecha();
+
 		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
 				this.fechaFinal);
-		
-		boolean validarDevolverPromocion = promocionFamiliar.devolverPromocion(
-				jose, this.listaItinerario);
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 6);
+		boolean estadoFechaValida = promocionFamiliar
+				.estadoFechaDePromocionValida();
+		promocionFamiliar.aplicarPromocion(jose, this.listaItinerario, true);
 
-		Assert.assertTrue(validarDevolverPromocion);
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(), 1110, 0);
 	}
-
+	
 	@Test
-	public void ValidarValorDevolucionConCuatroVisitantes() {
+	public void aplicarPromocionConMenosDeCuatroVisitantes(){
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
-		PromocionFamiliar promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
+		Promocion promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
 				this.fechaFinal);
-		float valorDevolverPromocion = promocionFamiliar.calcularValorPromocion(listaItinerario,4);
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 3);
+		boolean estadoFechaValida = promocionFamiliar
+				.estadoFechaDePromocionValida();
+		promocionFamiliar.aplicarPromocion(jose, this.listaItinerario, true);
 
-		Assert.assertEquals(valorDevolverPromocion,19,0);
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(), 1000, 0);
 	}
-
-	@Test
-	public void ValidarValorDevolucionConSeisVisitantes() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-
-		PromocionFamiliar promocionFamiliar = new PromocionFamiliar(this.Fechainicio,
-				this.fechaFinal);
-		float valorDevolverPromocion = promocionFamiliar.calcularValorPromocion(listaItinerario,6);
-
-		Assert.assertEquals(valorDevolverPromocion,133,0);
-	}
+	/*
+	 
+	 
+	 * 
+	 * @Test public void ValidarValorDevolucionConCuatroVisitantes() {
+	 * this.llenarPaqueteDeAtracciones(); this.configurarFecha();
+	 * 
+	 * PromocionFamiliar promocionFamiliar = new
+	 * PromocionFamiliar(this.Fechainicio, this.fechaFinal); float
+	 * valorDevolverPromocion =
+	 * promocionFamiliar.calcularValorPromocion(listaItinerario,4);
+	 * 
+	 * Assert.assertEquals(valorDevolverPromocion,19,0); }
+	 * 
+	 * @Test public void ValidarValorDevolucionConSeisVisitantes() {
+	 * this.llenarPaqueteDeAtracciones(); this.configurarFecha();
+	 * 
+	 * PromocionFamiliar promocionFamiliar = new
+	 * PromocionFamiliar(this.Fechainicio, this.fechaFinal); float
+	 * valorDevolverPromocion =
+	 * promocionFamiliar.calcularValorPromocion(listaItinerario,6);
+	 * 
+	 * Assert.assertEquals(valorDevolverPromocion,133,0); }
+	 */
 	private void configurarFechaFueraDeRango() {
 
 		Calendar calendar = Calendar.getInstance();
@@ -148,7 +162,7 @@ public class TestPromocionFamiliar {
 		PosicionPorCoordenadas posicionComarca = new PosicionPorCoordenadas(50,
 				10);
 
-		Atraccion comarca = new Atraccion(posicionComarca, 90, 20, 30,
+		Atraccion comarca = new Atraccion(posicionComarca, 10, 20, 30,
 				TipoDeAtraccion.aventura);
 
 		PosicionPorCoordenadas posicionGondor = new PosicionPorCoordenadas(50,

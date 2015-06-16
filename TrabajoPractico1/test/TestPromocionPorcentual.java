@@ -14,105 +14,84 @@ public class TestPromocionPorcentual {
 	Date Fechainicio = new Date();
 	Date fechaFinal = new Date();
 
+	
+
 	@Test
-	public void ValidarAplicarPromocion() {
+	public void aplicarPromocionConFechasValidas() {
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
 		Promocion promocionPorcentual = new PromocionPorcentual(
 				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
 
-		boolean estadoPromocion = promocionPorcentual.getAplicarPromocion();
-		Assert.assertFalse(estadoPromocion);
-
-		promocionPorcentual.setAplicarPromocion(true);
-		estadoPromocion = promocionPorcentual.getAplicarPromocion();
-		Assert.assertTrue(estadoPromocion);
-
-	}
-
-	@Test
-	public void ValidarConFechasValidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-
-		Promocion promocionPorcentual = new PromocionPorcentual(
-				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
-
-		boolean validarFechas = promocionPorcentual.validarFechaPromocion();
-		Assert.assertTrue(validarFechas);
-	}
-
-	@Test
-	public void ValidarConFechasInvalidas() {
-
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFechaFueraDeRango();
-		Promocion promocionPorcentual = new PromocionPorcentual(
-				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
-
-		boolean validarFechas = promocionPorcentual.validarFechaPromocion();
-
-		Assert.assertFalse(validarFechas);
-	}
-
-	@Test
-	public void AplicarPromocionConFechasInvalidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFechaFueraDeRango();
+		boolean estadoFechaValida = promocionPorcentual.estadoFechaDePromocionValida();
 		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
 				this.getPosicionUsuario(), 4);
+		
+		promocionPorcentual.aplicarPromocion(jose, this.listaItinerario,true);
+		
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(),1057 ,0);
+	}
+	
+	@Test
+	public void aplicarPromocionConFechasInvalidas() {
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFechaFueraDeRango();
+
 		Promocion promocionPorcentual = new PromocionPorcentual(
 				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
 
-		boolean validarDevolverPromocion = promocionPorcentual
-				.devolverPromocion(jose, this.listaItinerario);
-
-		Assert.assertFalse(validarDevolverPromocion);
-	}
-
-	@Test
-	public void AplicarPromocionConFechasValidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
+		boolean estadoFechaInvalida = promocionPorcentual.estadoFechaDePromocionValida();
 		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
 				this.getPosicionUsuario(), 4);
-		Promocion promocionPorcentual = new PromocionPorcentual(
-				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
-
-		boolean validarDevolverPromocion = promocionPorcentual
-				.devolverPromocion(jose, this.listaItinerario);
-
-		Assert.assertTrue(validarDevolverPromocion);
+		
+		promocionPorcentual.aplicarPromocion(jose, this.listaItinerario,true);
+		
+		Assert.assertFalse(estadoFechaInvalida);
+		Assert.assertEquals(jose.getPresupuesto(),1000 ,0);
 	}
-
+	
 	@Test
-	public void AtraccionesIncluidasEnPromocionValidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-
-		Promocion promocionPorcentual = new PromocionPorcentual(
-				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
-
-		boolean validarDevolverPromocion = ((PromocionPorcentual) promocionPorcentual)
-				.validarAtraccionesdeLaPromocion(listaItinerario);
-
-		Assert.assertTrue(validarDevolverPromocion);
-	}
-
-	@Test
-	public void AtraccionesIncluidasEnPromocionInvalidas() {
+	public void aplicarPromocionConAtraccionesNoIncluidasEnItinerario(){
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
 		Promocion promocionPorcentual = new PromocionPorcentual(
 				this.Fechainicio, this.fechaFinal, 30, this.listaDeAtraccionesFallida);
 
-		boolean validarDevolverPromocion =  ((PromocionPorcentual) promocionPorcentual).validarAtraccionesdeLaPromocion(listaItinerario);
-
-		Assert.assertFalse(validarDevolverPromocion);
+		boolean estadoFechaValida = promocionPorcentual.estadoFechaDePromocionValida();
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 4);
+		
+		promocionPorcentual.aplicarPromocion(jose, this.listaItinerario,true);
+		
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(),1000 ,0);
 	}
+	
+	
+	@Test
+	public void aplicarPromocionCuandoNoSonAcumulables(){
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFecha();
 
+		Promocion promocionPorcentual = new PromocionPorcentual(
+				this.Fechainicio, this.fechaFinal, 30, this.listaDeatracciones);
+
+		boolean estadoFechaValida = promocionPorcentual.estadoFechaDePromocionValida();
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(), 4);
+		
+		promocionPorcentual.aplicarPromocion(jose, this.listaItinerario,false);
+		
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(),1000 ,0);
+	}
+	
+
+	
+	
 	private void configurarFechaFueraDeRango() {
 
 		Calendar calendar = Calendar.getInstance();

@@ -15,119 +15,64 @@ public class TestPromocionExtranjero {
 	Date fechaFinal = new Date();
 
 	@Test
-	public void ValidarConFechasValidas() {
+	public void aplicarPromocionConFechasValidas() {
 		this.llenarPaqueteDeAtracciones();
 		this.configurarFecha();
 
 		Promocion promocionExtranjero = new PromocionExtranjero(
 				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
 
-		boolean validarFechas = promocionExtranjero.validarFechaPromocion();
-		Assert.assertTrue(validarFechas);
-	}
-
-	@Test
-	public void ValidarConFechasInvalidas() {
-
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFechaFueraDeRango();
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
-
-		boolean validarFechas = promocionExtranjero.validarFechaPromocion();
-
-		Assert.assertFalse(validarFechas);
-	}
-
-	@Test
-	public void AplicarPromocionConFechasInvalidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFechaFueraDeRango();
+		boolean estadoFechaValida = promocionExtranjero.estadoFechaDePromocionValida();
 		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
-				this.getPosicionUsuarioMasDoscientosKilometros(),4);
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
-
-		boolean validarDevolverPromocion = promocionExtranjero
-				.devolverPromocion(jose, this.listaItinerario);
-		Assert.assertFalse(validarDevolverPromocion);
-	}
-
-	@Test
-	public void AplicarPromocionConFechasValidas() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
-				this.getPosicionUsuarioMasDoscientosKilometros(), 4);
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
-
-		boolean validarDevolverPromocion = promocionExtranjero
-				.devolverPromocion(jose, this.listaItinerario);
-
-		Assert.assertTrue(validarDevolverPromocion);
-	}
-
-	@Test
-	public void AplicarPromocionConDistanciaInferiorADoscientos() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
-				this.getPosicionUsuarioMenosDoscientosKilometros(), 4);
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
-
-		boolean validarDevolverPromocion = promocionExtranjero
-				.devolverPromocion(jose, this.listaItinerario);
-
-		Assert.assertFalse(validarDevolverPromocion);
-	}
-
-	@Test
-	public void AplicarPromocionConDistanciaSuperiorADoscientos() {
-		this.llenarPaqueteDeAtracciones();
-		this.configurarFecha();
-		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
-				this.getPosicionUsuarioMasDoscientosKilometros(), 4);
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
-
-		boolean validarDevolverPromocion = promocionExtranjero
-				.devolverPromocion(jose, this.listaItinerario);
-
-		Assert.assertTrue(validarDevolverPromocion);
-	}
-
-	@Test
-	public void DistanciaMaximaAlParqueInvalida() {
-		this.llenarPaqueteDeAtracciones();
+				this.getPosicionUsuario(),4);
 		
-		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.aventura,
-				this.getPosicionUsuarioMenosDoscientosKilometros(), 1);
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
+		promocionExtranjero.aplicarPromocion(jose, this.listaItinerario, false);
 		
-		boolean distanciaAlParque = (((PromocionExtranjero) promocionExtranjero).calcularDistanciaUsuarioAlParque(jose.getPosicion()) > 200000);
 		
-		Assert.assertFalse(distanciaAlParque);
-
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(),1380,0);
+		
 	}
-
-	@Test
-	public void DistanciaMaximaAlParqueValida() {
-		this.llenarPaqueteDeAtracciones();
-		Usuario jose = new Usuario(100, 300, 160, TipoDeAtraccion.aventura,
-				this.getPosicionUsuarioMasDoscientosKilometros(),1);
-		Promocion promocionExtranjero = new PromocionExtranjero(
-				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
-		boolean distanciaAlParque = (((PromocionExtranjero) promocionExtranjero).calcularDistanciaUsuarioAlParque(jose.getPosicion()) > 200000);
-		
-		Assert.assertTrue(distanciaAlParque);
-
-	}
-
 	
-	
+	@Test
+	public void aplicarPromocionConFechasInvalidas() {
+		this.llenarPaqueteDeAtracciones();
+	this.configurarFechaFueraDeRango();
+
+		Promocion promocionExtranjero = new PromocionExtranjero(
+				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
+
+		boolean estadoFechaInvalida = promocionExtranjero.estadoFechaDePromocionValida();
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(),4);
+		
+		promocionExtranjero.aplicarPromocion(jose, this.listaItinerario, false);
+		
+		
+		Assert.assertFalse(estadoFechaInvalida);
+		Assert.assertEquals(jose.getPresupuesto(),1000,0);
+		
+	}
+
+	@Test
+	public void aplicarPromocionCuandoSonAcumulables() {
+		this.llenarPaqueteDeAtracciones();
+		this.configurarFecha();
+
+		Promocion promocionExtranjero = new PromocionExtranjero(
+				this.Fechainicio, this.fechaFinal,this.listaDeatracciones);
+
+		boolean estadoFechaValida = promocionExtranjero.estadoFechaDePromocionValida();
+		Usuario jose = new Usuario(1000, 10, 160, TipoDeAtraccion.paisaje,
+				this.getPosicionUsuario(),4);
+		
+		promocionExtranjero.aplicarPromocion(jose, this.listaItinerario, true);
+		
+		
+		Assert.assertTrue(estadoFechaValida);
+		Assert.assertEquals(jose.getPresupuesto(),1000,0);
+		
+	}
 	
 	private void configurarFechaFueraDeRango() {
 
@@ -147,13 +92,9 @@ public class TestPromocionExtranjero {
 		this.fechaFinal = calendar.getTime();
 	}
 
-	private PosicionPorCoordenadas getPosicionUsuarioMenosDoscientosKilometros() {
-		PosicionPorCoordenadas posicionUsuario = new PosicionPorCoordenadas(10,
-				10);
-		return posicionUsuario;
-	}
+	
 
-	private PosicionPorCoordenadas getPosicionUsuarioMasDoscientosKilometros() {
+	private PosicionPorCoordenadas getPosicionUsuario() {
 		PosicionPorCoordenadas posicionUsuario = new PosicionPorCoordenadas(
 				205000, 200000);
 		return posicionUsuario;
